@@ -38,7 +38,7 @@ async def test_project(dut):
 
     # Keep testing the module by changing the input values, waiting for
     # one or more clock cycles, and asserting the expected output values.
-     max_val = 255  # Maximum sum value allowed
+    max_val = 255  # Maximum sum value allowed
     a_vals = [i for i in range(max_val)]  # ui_in can range from 0 to 255
     b_vals = [j for j in range(max_val)]  # uio_in can also range from 0 to 255
 
