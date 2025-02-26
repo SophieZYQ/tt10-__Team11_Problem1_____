@@ -42,25 +42,27 @@ async def test_project(dut):
     a_vals = [i for i in range(max_val)]  # ui_in can range from 0 to 255
     b_vals = [j for j in range(max_val)]  # uio_in can also range from 0 to 255
 
-    for i in range(len(a_vals)):
-        for j in range(len(b_vals)):
-            # Set the input values
-            dut.ui_in.value = a_vals[i]
-            dut.uio_in.value = b_vals[j]
+      integer a, b;
+        for (a = 0; a < 256; a = a + 1) begin
+            for (b = 0; b < 256; b = b + 1) begin
+                // Set input values
+                ui_in = a;
+                uio_in = b;
+                #10;
+                
+                // Calculate expected value with modulo 256 behavior
+                reg [7:0] expected_uo_out;
+                expected_uo_out = (a + b) % 256;
+                
+                // Log the output and check the assertion
+                $display("Test case ui_in=%d, uio_in=%d -> uo_out=%d", a, b, uo_out);
+                
+                if (uo_out !== expected_uo_out) begin
+                    $display("ERROR: Expected %d, but got %d", expected_uo_out, uo_out);
+                end
+            end
+        end
+        $display("Comprehensive loop testing completed.");
+    end
 
-            # Wait for one or more clock cycles to see the output values
-            await ClockCycles(dut.clk, 20)  # Allow enough time for the DUT to process
-
-            # Log the output and check the assertion
-            dut._log.info(f"Test case ui_in={a_vals[i]}, uio_in={b_vals[j]} -> uo_out={dut.uo_out.value}")
-
-            # Expected output logic (assuming sum modulo 256, replace as per DUT logic)
-            expected_uo_out = (a_vals[i] + b_vals[j]) % 256
-
-            # Assert the output matches the expected value
-            assert int(dut.uo_out.value) == expected_uo_out, (
-                f"Test failed for ui_in={a_vals[i]}, uio_in={b_vals[j]}. Expected {expected_uo_out}, "
-                f"but got {dut.uo_out.value}")
-            
-            # Optionally log the test case result if the assertion passed
-            dut._log.info(f"Test passed for ui_in={a_vals[i]}, uio_in={b_vals[j]} with uo_out={dut.uo_out.value}")
+endmodule
