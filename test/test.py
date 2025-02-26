@@ -65,6 +65,3 @@ async def test_project(dut):
             
             # Optionally log the test case result if the assertion passed
             dut._log.info(f"Test passed for ui_in={a_vals[i]}, uio_in={b_vals[j]} with uo_out={dut.uo_out.value}")
-
-
-endmodule
